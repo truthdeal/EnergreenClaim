@@ -145,10 +145,10 @@ describe("EnergreenToken Claim", function () {
 
         let signature2 = await signToken(claimInstance.address, acc1.address, claimLimit, claimStartTimestamp);
 
-        // zamanindan once claim etmeye calisirsa hata alir
+        // if tries to claim before the time, it gets an error
         await expect(claimInstance.connect(acc1).claimTokens(acc1.address, claimLimit, claimStartTimestamp, signature2)).to.revertedWith("tried to claim at future timestamp");
 
-        // if tries to claim before the time, it gets an error
+        // 1 hour later if tries to claim before the time, it gets an error
         await timeTravelV2(1 * 60 * 60 + 15);
         await expect(claimInstance.connect(acc1).claimTokens(acc1.address, claimLimit, claimStartTimestamp, signature2)).to.revertedWith("tried to claim at future timestamp");
 

@@ -151,11 +151,6 @@ contract EnergreenClaim is ReentrancyGuard, Ownable {
         emit ClaimProcessed(_recipient,  claimAmount, _claimLimit, block.timestamp);
     }
 
-    // Function to get the claim amount of a recipient
-    function getClaimAmount(address _recipient) external view returns (uint256) {
-        return claimed[_recipient];
-    }
-
     // Function to test the claim info
     function testClaimInfo(
         address _recipient,
