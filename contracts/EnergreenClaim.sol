@@ -1,52 +1,4 @@
 // SPDX-License-Identifier: MIT
-/*  
-                                                                              
-                                             .******,.                                            
-                                   &@@@@@@@@@@@@@@@@@@@@@@@@@@&                                 
-                             ,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,                           
-                         *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.                       
-                      #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                    
-                    @@@@@@@@@@@@@@@@@@@@@@@%.        .&@@@@@@@@@@@@@@@@@@@@@@@                  
-                 ,@@@@@@@@@@@@@@@@@@(                                                           
-               .@@@@@@@@@@@@@@@@                                                                
-              @@@@@@@@@@@@@@@.                                                                  
-             @@@@@@@@@@@@@@                                                                     
-           *@@@@@@@@@@@@@              *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          
-          .@@@@@@@@@@@@%          /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         
-          @@@@@@@@@@@@/         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
-         @@@@@@@@@@@@&         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*       
-         @@@@@@@@@@@@          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       
-         @@@@@@@@@@@@                                                                           
-        *@@@@@@@@@@@(                                                                           
-        .@@@@@@@@@@@&                                                                           
-         @@@@@@@@@@@@          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       
-         @@@@@@@@@@@@,        .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%       
-          @@@@@@@@@@@@         *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
-          %@@@@@@@@@@@@          /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*        
-           @@@@@@@@@@@@@&            #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%         
-            &@@@@@@@@@@@@@,                                            .@@@@@@@@@@@@@*          
-             .@@@@@@@@@@@@@@/                                        ,@@@@@@@@@@@@@@            
-               @@@@@@@@@@@@@@@@.                                   @@@@@@@@@@@@@@@&             
-                 @@@@@@@@@@@@@@@@@@                            @@@@@@@@@@@@@@@@@@               
-                   @@@@@@@@@@@@@@@@@@@@@#                #@@@@@@@@@@@@@@@@@@@@@                 
-                     /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,                   
-                        /@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,                      
-                            &@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%                          
-                                 &@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                               
-                                         (@@@@@@@@@@@@@@(.                                      
-                                                                                                                     
-                                                                                           
-
-              ______  _   _   ______   _____     _____   _____   ______  ______  _   _ 
-             |  ____ | \ | | |  ____  |  __ \   / ____| |  __ \ |  ____ |  ____ | \ | |
-             | |__   |  \| | | |__    | |__) | | |  __  | |__)| | |__   | |__   |  \| |
-             |  __|  | . ` | |  __|   |  _  /  | | |_ | |  _  / |  __|  |  __|  | . ` |
-             | |____ | |\  | | |____  | | \ \  | |__| | | | \ \ | |____ | |____ | |\  |
-             |______ |_| \_| |______  |_|  \_\  \_____| |_|  \_||______ |______ |_| \_|
-                                                               
-                                                            
-@author : Baris Arya Cantepe        
-*/
 
 pragma solidity ^0.8.0;
 
@@ -67,6 +19,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
   - Holder must have tokens
   - Holder must give allowance to this contract
 */
+
 contract EnergreenClaim is ReentrancyGuard, Ownable {
     // Event to be emitted when a claim is processed
     event ClaimProcessed(address recipient, uint256 nowClaimed, uint256 totalClaimed, uint256 date);
@@ -74,11 +27,9 @@ contract EnergreenClaim is ReentrancyGuard, Ownable {
     using SafeERC20 for IERC20;
     using ECDSA for bytes32;
 
-    address private immutable tokenAddress;  // Address of the token
+    IERC20 private immutable egrn;  // The token interface
     address private signer;  // The address that signs the transaction
-    address private tokenHolder;  // The address that provides the token
-
-    IERC20 egrn;  // The token interface
+    address internal tokenHolder;
 
     // Blacklisted addresses cannot claim (can be used if an account is stolen after signing)
     mapping(address => bool) private blacklist;
@@ -86,9 +37,7 @@ contract EnergreenClaim is ReentrancyGuard, Ownable {
     // Mapping of address to total claim made
     mapping(address => uint256) public claimed;
 
-    constructor(address _tokenAddress, address _tokenHolder, address _signer) {
-        tokenAddress = _tokenAddress;
-        tokenHolder = _tokenHolder;
+    constructor(address _tokenAddress , address _signer) {
         signer = _signer;
         egrn = IERC20(_tokenAddress);
     }
