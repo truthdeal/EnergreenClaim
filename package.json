@@ -19,7 +19,8 @@
   "homepage": "https://github.com/truthdeal/EnergreenClaim#readme",
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",

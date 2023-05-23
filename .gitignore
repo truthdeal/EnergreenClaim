@@ -18,7 +18,8 @@
 *.zip
 *.tar.gz
 *.rar
-
+src/
+signatureList/
 # Node artifact files
 node_modules/
 dist/
